@@ -1,6 +1,6 @@
 package org.indyscala.typeclasses.h
 
-// now with less boilerplate (but more compile-time magic)
+// now with less boilerplate (and more compile-time magic)
 
 import simulacrum._
 
@@ -18,9 +18,7 @@ object Pretty {
 }
 
 object Demo extends App {
-  import Pretty._
-  /* no longer able to compile simultaneously
+  import Pretty.ops._
   println(888.pp)
   println("hhh".pp)
-  */
 }
