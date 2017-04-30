@@ -1,5 +1,10 @@
 package org.indyscala.typeclasses.a
 
+/*
+  Looks more like a type class, but still really naive.
+  Calling `intPrinter.pp(111)` is pretty rotten.
+*/
+
 trait Pretty[A] {
   def pp(a: A): String
 }

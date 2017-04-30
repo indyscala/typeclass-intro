@@ -1,14 +1,19 @@
 package org.indyscala.typeclasses.d
 
+/*
+  Another convention is to define `apply()` on the companion
+  object to avoid using `implicitly`.
+*/
+
 trait Pretty[A] {
   def pp(a: A): String
 }
 
 object Pretty {
-  // with conventional `apply()` instead of `implicitly`
   def apply[A](implicit pretty: Pretty[A]): Pretty[A] = pretty
 
   def pp[A: Pretty](a: A) = Pretty[A].pp(a)
+  // was:                 = implicitly[Pretty[A]].pp(a)
 
   implicit val intPrinter: Pretty[Int] = new Pretty[Int] {
     def pp(i: Int): String = s"int $i"

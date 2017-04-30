@@ -1,5 +1,11 @@
 package org.indyscala.typeclasses.e
 
+/*
+  Common to support infix notation like `123.pp` or `"abc".pp`.
+  Add implicit "Ops" class to the companion object for that.
+  (Less efficient version.)
+*/
+
 trait Pretty[A] {
   def pp(a: A): String
 }

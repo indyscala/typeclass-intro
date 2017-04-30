@@ -1,10 +1,16 @@
 package org.indyscala.typeclasses.h
 
-// now with less boilerplate (and more compile-time magic)
+/*
+  Type classes require a lot of boilerplate code in Scala.
+  Can we avoid it?
+
+  That's what the Simulacrum compiler plugin does.  It uses
+  macros to write the boilerplate.
+*/
 
 import simulacrum._
 
-
+// now with less boilerplate...and more compile-time magic
 @typeclass trait Pretty[A] {
   def pp(a: A): String
 }

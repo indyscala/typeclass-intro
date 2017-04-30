@@ -1,5 +1,10 @@
 package org.indyscala.typeclasses.g
 
+/*
+  All our type class instances, Pretty[Int], Pretty[String], etc.,
+  take an `A` and return a `String`.  Let's abstract that out too.
+*/
+
 trait Pretty[A] {
   def pp(a: A): String
 }
@@ -13,17 +18,7 @@ object Pretty {
     def pp(implicit pretty: Pretty[A]) = pretty.pp(a)
   }
 
-  // abstract over converting from instance of A to a String
-
-  // in 2.12, we can use Single Abstract Methods:
-  implicit val intPrinter: Pretty[Int] = 
-    i => s"int $i"
-
-  implicit val strPrinter: Pretty[String] =
-    s => s"str $s"
-
-/*
-  Before 2.12, we would define `instance` that takes function from A to String:
+  // `instance(func)` returns an instance of the type class
   def instance[A](func: A => String): Pretty[A] =
     new Pretty[A] {
       def pp(a: A): String = func(a)
@@ -34,6 +29,17 @@ object Pretty {
 
   implicit val strPrinter: Pretty[String] =
     instance(s => s"int $s")
+
+/*
+  In 2.12 and later, there's less boilerplate with Single Abstract
+  Methods.  `instance()` is not required and we can create type class
+  instances with:
+
+  implicit val intPrinter: Pretty[Int] =
+    i => s"int $i"
+
+  implicit val strPrinter: Pretty[String] =
+    s => s"str $s"
 */
 }
 
@@ -42,7 +48,7 @@ object Demo extends App {
   println(777.pp)
   println("ggg".pp)
 
-  // and we can add pretty printers for abitrary types...
+  // and we can add pretty printers for arbitrary types...
   case class Person(name: String, age: Int)
 
   implicit val personPrinter: Pretty[Person] = p => s"${p.name} is ${p.age}"

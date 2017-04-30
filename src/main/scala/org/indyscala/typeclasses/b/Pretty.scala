@@ -1,5 +1,10 @@
 package org.indyscala.typeclasses.b
 
+/*
+  Let's move `pp()` into the companion object so
+  we don't need to call it explicitly.
+*/
+
 trait Pretty[A] {
   def pp(a: A): String
 }

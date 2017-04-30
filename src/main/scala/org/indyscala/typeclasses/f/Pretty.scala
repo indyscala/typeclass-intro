@@ -1,5 +1,10 @@
 package org.indyscala.typeclasses.f
 
+/*
+  Using value class for `PrettyOps` avoids runtime overhead.
+  (More efficient version.)
+*/
+
 trait Pretty[A] {
   def pp(a: A): String
 }
