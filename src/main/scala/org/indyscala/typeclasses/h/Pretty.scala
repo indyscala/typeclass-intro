@@ -10,6 +10,9 @@ import simulacrum._
 }
 
 object Pretty {
+  // Yes, scalac, we want implicit conversion for `toPrettyOps`.
+  import scala.language.implicitConversions
+
   implicit val intPrinter: Pretty[Int] = 
     i => s"int $i"
 
