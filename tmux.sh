@@ -20,6 +20,9 @@ tmux set-option -g -t $S allow-rename off
 for P in a b c d e f g h; do
     tmux new-window -t $S -n $P \; send-keys "vi src/main/scala/org/indyscala/typeclasses/$P/Pretty.scala" C-m
 done
-tmux select-window -t 1
+
+tmux select-window -t 0
+tmux rename-window naive
+tmux send-keys "vi src/main/scala/org/indyscala/typeclasses/naive/Pretty.scala" C-m
 
 tmux attach -t typeclasses
