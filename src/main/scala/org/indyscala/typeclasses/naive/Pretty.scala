@@ -10,3 +10,9 @@ object Demo extends App {
   println(pp(123))
   println(pp("abc"))
 }
+
+/*
+  Problems:
+   * difficult to extend
+   * cumbersome to use
+*/

@@ -15,7 +15,7 @@ object Pretty {
 
   def pp[A: Pretty](a: A) = Pretty[A].pp(a)
 
-  // add operations, e.g. "Ops" so `.pp` can be called on our instance
+  // add operations, e.g. "Ops", so `.pp` can be called on our instance
   implicit class PrettyOps[A: Pretty](a: A) {
     def pp = Pretty[A].pp(a)
   }

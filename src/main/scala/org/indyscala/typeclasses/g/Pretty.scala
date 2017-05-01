@@ -54,4 +54,9 @@ object Demo extends App {
   implicit val personPrinter: Pretty[Person] = p => s"${p.name} is ${p.age}"
 
   println(Person("Brad", 29).pp)
+
+  // But what about...
+  // println(pp(Some("option")))
+
+  // hint: scala.annotation.implicitNotFound
 }
