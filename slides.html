@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to Type Classes in Scala</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .ref {
+        line-height: 0;
+        position: relative;
+        vertical-align: baseline;
+        top: -0.4em;
+        left: -0.3em;
+        font-size: 0.8em;
+      }
+      .footnote {
+        position: absolute;
+        bottom: 5em;
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Introduction to Type Classes in Scala
+
+by [Brad Fritz](http://bfritz.com/)
+
+---
+
+## Goals
+
+ * What is a [type class](http://typelevel.org/cats/typeclasses.html)?
+ * Why should I care?
+ * How can I write a Scala type class?
+ * Introduce a couple well-known type classes:
+    * [Semigroup](http://typelevel.org/cats/typeclasses/semigroup.html)
+    * [Monoid](http://typelevel.org/cats/typeclasses/monoid.html)
+
+But:
+
+ * Avoid jargon from category theory or functional programming.
+ * Do not assume advanced Scala experience.
+
+---
+
+## What
+
+Technique to apply a common pattern over multiple types.  Roughly:
+
+trait + implicit values ≈ duck typing
+
+-- -- --
+
+Pretty printing example:
+```scala
+scala> println(123.pp)
+int 123
+
+scala> println("123".pp)
+str 123
+
+scala> println(Person("John", "Doe").pp)
+name: Doe, John
+
+scala> println(Some("thing").pp)
+got it
+
+scala> println(None.pp)
+dunno
+```
+
+---
+
+## What
+
+Another example .ref[*]:
+
+```scala
+def sumInts(list: List[Int]): Int = list.foldRight(0)(_ + _)
+
+def concatStrings(list: List[String]): String = list.foldRight("")(_ ++ _)
+
+def unionSets[A](list: List[Set[A]]): Set[A] = list.foldRight(Set.empty[A])(_ union _)
+```
+
+They all have the same shape.  Can we write a more generic version?
+
+```scala
+def combineAll[A](list: List[A], ???): A =
+  list.foldRight(???)(???)
+```
+
+.footnote[\* From http://typelevel.org/cats/typeclasses.html]
+
+---
+
+## What
+
+```scala
+trait T[A] {
+  def empty: A
+  def combine(x: A, y: A): A
+}
+// Algebra and FP nerds have a name for this shape: a monoid*
+
+def combineAll[A](list: List[A], A: T[A]): A = list.foldRight(A.empty)(A.combine)
+```
+
+.footnote[\* ...assuming `empty()` and `combine()` satisify some laws.]
+---
+
+## Why
+
+Extract common patterns, like `combineAll()`, into library code...
+ * often with typical implementations provided, and
+ * without losing the ability to customize behavior for specific types.
+
+???
+
+http4s `Managed` / `Releaseable` use case:
+https://gist.github.com/rossabaker/718772d6a17918a2b515d26ee6236d8e
+
+---
+
+## How - Pretty Printing Demo
+
+Example inspired by Łukasz Indykiewicz's blog post at:
+http://blog.scalac.io/2017/04/19/typeclasses-in-scala.html
+
+---
+
+## Common FP Type Classes
+
+ * Semigroup
+ * Monoid
+ * Eq
+ * Monad
+ * Functor
+ * Applicative
+ * [many others](https://github.com/typelevel/cats/issues/1633)
+
+---
+
+## Semigroup
+
+```scala
+trait Semigroup[A] {
+  def combine(x: A, y: A): A
+}
+```
+
+Laws:
+ * `combine()` is associative
+
+http://typelevel.org/cats/typeclasses/semigroup.html
+
+---
+
+## Monoid
+
+```scala
+trait Monoid[A] {
+  def combine(x: A, y: A): A
+  def empty: A
+}
+```
+
+Or:
+
+```scala
+trait Monoid[A] extends Semigroup[A] {
+  def empty: A
+}
+```
+
+Laws:
+ * `combine()` is associative
+ * `empty()` is identity for `combine()`
+
+http://typelevel.org/cats/typeclasses/monoid.html
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
